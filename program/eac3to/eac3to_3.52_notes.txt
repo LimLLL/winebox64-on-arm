@@ -1,0 +1,90 @@
+UHD/HEVC support
+----------------
+
+This mod version fixes many issues with HEVC and UHD disks as well
+as several other bugs.
+
+THD+AC3 file support
+--------------------
+
+Caution is needed when making a thd+ac3 file. If the THD stream
+has a delay, then when demuxing, eac3to delay-corrects the AC3 stream but
+not the THD stream. So naively merging the demuxed streams will be
+problematic. The THD delay would need to be manualy applied to
+the AC3 stream before merging. For this reason, use of the thd+ac3
+extension is not recommended. Generate the thd+ac3 file externally using
+a fully correct procedure.
+
+INI File Support
+----------------
+
+You may create an eac3to.ini file that allows you to customize
+program defaults and control some program options. The INI may have
+the following items:
+
+-fast
+
+This causes eac3to to run in fast mode. This option may be
+overridden on the command line with -normal.
+
+-keepDialnorm
+
+This causes dialog normalization to be retained. This option may
+be overridden on the command line with -removeDialnorm.
+
+-progressnumbers
+
+This causes progress numbers to be used instead of progress bars.
+
+-showall
+
+This causes all playlists to be displayed. If this option is absent
+playlist display will be as in version 3.34/3.36. This option may also
+be supplied on the command line. This option can be useful for extracting
+menu playlists. Note that -showall is subject to the -minDuration
+option.
+
+-minDuration=600
+
+When listing playlists with -showall, this causes playlists with durations
+less than the specified duration in seconds to be suppressed.
+If it is absent 600 seconds is assumed. This option may be overridden
+on the command line with -minDuration=xxx.
+
+-destpath="d:\tmp\"
+
+Output directory for created files. If not given, the current directory is
+used. Do not omit the trailing \ character.  This option may be overridden
+on the command line with -destpath="path".
+
+-nolog
+
+This disables log file creation. This option can only be given in the INI file
+and not on the command line.
+
+Log File
+--------
+
+Log file generation was changed. Previously two identical copies of the log file
+were generated in the directory where eac3to.exe was located. One of them was
+called simply "log.txt", and the second was prefixed with an identifier related
+to the first source file. If the command did not involve a source file, then only
+the first one was generated.
+
+Now, only one log file is generated. It is generated either in the current directory
+or the directory specified by the -destpath option (if given). The current directory
+is defined as the directory you are in when you issue the eac3to command. This is
+typically the same as the source file directory if you go to that directory to run
+eac3to, but that may not be the case. It depends on how you or the 3rd-party
+application that invokes eac3to operates.
+
+The log file name is "logXXXX.txt", where the XXXX is the numerical PID number of
+the eac3to command. Every command uses a different PID so this scheme completely
+prevents overwriting of log files. Note that you can determine the creation date
+and time of the log file by inspecting the file creation time.
+
+eac3to deletes log files automatically as needed to ensure that there are a maximum
+of only 5 log files in any directory. This prevents uncontrolled accumulation of
+log files.
+
+Log file creation can be disabled entirely by placing -nolog in the INI file.
