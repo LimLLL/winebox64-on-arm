@@ -56,5 +56,15 @@ RUN bash /wrap-wine.sh \
  && rm /wrap-wine.sh
 
 WORKDIR /root
+
+VOLUME ["/demux", '/root/program']
+
+# 初始化wine
+RUN wine wineboot && wine64 wineboot && \
+    xvfb-run sh -c "winetricks -q vcrun2019"
+
+# 把程序拷入容器
+COPY program /root/program
+
 ENTRYPOINT ["bash", "-c"]
 CMD ["bash"]
